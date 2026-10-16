@@ -43,7 +43,7 @@ BUSINESS = {
     "region": "RJ",
     "country": "BR",
     # Coloque aqui as URLs dos perfis oficiais (LinkedIn, Instagram...).
-    "sameAs": [],
+    "sameAs": ["https://www.instagram.com/lbhorizon.consultoria/"],
 }
 SERVICES = {
     "pt": ["Consultoria em Tecnologia", "Inteligência Artificial", "Automação de Processos",
