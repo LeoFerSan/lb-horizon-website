@@ -1,17 +1,32 @@
-LB Horizon Landing Page V1.2 (PT / EN / ES)
+LB Horizon Landing Page V1.3 (PT / EN / ES) — com SEO
 
-1. Abra o index.html no navegador para visualizar.
-2. Idiomas: o seletor PT / EN / ES fica no topo da página. Na primeira visita, a página
-   usa o idioma do navegador do visitante (português, inglês ou espanhol; outros caem
-   em inglês) e lembra a última escolha. Também é possível forçar um idioma pelo link:
-   index.html?lang=pt  |  ?lang=en  |  ?lang=es
-3. WhatsApp configurado: 5521983769654. Para trocar, edite o número (com DDI, só dígitos)
-   em dois lugares no index.html: na variável WHATSAPP_NUMBER (no script, perto do fim
-   do arquivo) e no link do botão.
-4. Troque hello@lbhorizon.com.br se for usar outro e-mail corporativo.
-5. Todos os textos ficam no bloco I18N, no script ao final do index.html, separados
-   por idioma (en, pt, es). Para alterar um texto, edite-o nos três idiomas.
-6. Envie o index.html para o diretório público da hospedagem escolhida.
+COMO O SITE ESTÁ ORGANIZADO
+- src/index.html ...... ARQUIVO-FONTE. Todos os textos ficam no bloco I18N, no script ao
+                        final dele, separados por idioma (en, pt, es). Edite sempre aqui.
+- build.py ............ gera as páginas publicadas a partir do src/index.html.
+- index.html .......... página em português (gerada; não edite à mão)
+- en/index.html ....... página em inglês (gerada)
+- es/index.html ....... página em espanhol (gerada)
+- sitemap.xml ......... lista das páginas para o Google (gerada)
+- robots.txt .......... instruções para buscadores
+- og-image.png ........ imagem que aparece ao compartilhar o link (WhatsApp, LinkedIn...)
+- logo.png ............ logo usada nos dados estruturados do Google
 
-A página não tem bibliotecas externas. A logo e o ícone da aba (favicon) estão embutidos
-no próprio index.html, então não há arquivos de imagem para enviar à hospedagem.
+PARA ALTERAR UM TEXTO
+1. Edite o texto nos três idiomas no bloco I18N de src/index.html.
+2. Rode:  python3 build.py
+3. Faça commit de tudo (src, index.html, en/, es/, sitemap.xml) e envie ao GitHub.
+
+IDIOMAS
+- Cada idioma tem a sua própria URL: lbhorizon.com.br/ (PT), /en/ e /es/.
+  Isso permite que o Google indexe as três versões.
+- O seletor PT / EN / ES leva à URL do idioma e lembra a escolha do visitante.
+
+DADOS DA EMPRESA PARA O GOOGLE
+- Telefone, e-mail, cidade, data de abertura e perfis sociais ficam no topo do build.py
+  (BUSINESS). Quando tiver as URLs do LinkedIn e do Instagram da empresa, coloque-as
+  em "sameAs" e rode o build de novo.
+
+WHATSAPP
+- Número: 5521983769654. Para trocar, edite a variável WHATSAPP_NUMBER e o link do botão
+  em src/index.html e rode o build.
