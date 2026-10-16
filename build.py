@@ -36,7 +36,7 @@ HREFLANG = {"pt": "pt-BR", "en": "en", "es": "es"}
 BUSINESS = {
     "name": "LB Horizon",
     "telephone": "+55-21-98376-9654",
-    "email": "hello@lbhorizon.com.br",
+    "email": "lbhorizon.consultoria@gmail.com",
     "founder": "Leonardo Ferreira dos Santos",
     "foundingDate": "2026-07-15",
     "city": "Rio de Janeiro",
