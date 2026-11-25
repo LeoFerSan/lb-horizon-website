@@ -1,0 +1,14 @@
+// Configuração do Worker que publica o site lbhorizon.com.br.
+// Arquivos estáticos: a raiz do repositório. Código: worker/index.js (só /api/leads).
+{
+  "name": "lb-horizon-website",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": ".",
+    "binding": "ASSETS"
+  },
+  "observability": { "enabled": true },
+  // Exigido pelo "wrangler preview" que a Cloudflare roda nos ramos (pré-visualizações)
+  "previews": {}
+}

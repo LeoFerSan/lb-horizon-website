@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /src/
+Disallow: /pesquisa/
+Disallow: /api/
 
 Sitemap: https://lbhorizon.com.br/sitemap.xml

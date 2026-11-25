@@ -1,0 +1,6 @@
+/pesquisa/pesquisa.appcache
+  Content-Type: text/cache-manifest
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/pesquisa/*
+  X-Robots-Tag: noindex, nofollow

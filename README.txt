@@ -30,3 +30,14 @@ DADOS DA EMPRESA PARA O GOOGLE
 WHATSAPP
 - Número: 5521983769654. Para trocar, edite a variável WHATSAPP_NUMBER e o link do botão
   em src/index.html e rode o build.
+
+PESQUISA DE CAMPO ADEMICON (iPad 2)
+- pesquisa/index.html ........ página da pesquisa (lbhorizon.com.br/pesquisa/), funciona offline
+- pesquisa/pesquisa.appcache . cache offline do iPad. Ao alterar o index.html, mude a linha "# v3".
+- worker/index.js ............ código do Worker (POST /api/leads) que grava no Neon,
+                               projeto "Dashboard Ademicon", tabela pesquisa_campo.
+- _headers ................... cabeçalhos do cache offline
+- wrangler.jsonc ............. configuração do Worker (site estático + /api/leads)
+- Variáveis secretas no Worker lb-horizon-website (Settings > Variables and Secrets):
+  DATABASE_URL (usuário pesquisa_writer, só grava) e LEADS_TOKEN (mesmo token do iPad).
+- O build.py não mexe nesses arquivos.
