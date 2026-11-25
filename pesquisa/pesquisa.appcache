@@ -1,0 +1,9 @@
+CACHE MANIFEST
+# v3 2026-11-25
+# Altere a linha acima (ex.: v3) sempre que publicar uma nova versão do index.html,
+# senão o iPad continua usando a versão antiga guardada em cache.
+# A própria página (index.html) entra no cache automaticamente; não liste aqui
+# para evitar redirecionamentos de "URL bonita" da Cloudflare, que quebram o AppCache.
+
+NETWORK:
+*

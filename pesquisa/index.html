@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="pt-BR" manifest="pesquisa.appcache">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Pesquisa">
+<meta name="format-detection" content="telephone=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Ademicon | Pesquisa</title>
+<style>
+/* Compatível com Safari 9 (iPad 2 / iOS 9.3.5): sem CSS Grid, sem gap em flex, sem variáveis CSS */
+*{box-sizing:border-box;-webkit-tap-highlight-color:rgba(0,0,0,0)}
+html,body{margin:0;height:100%;font-family:"Helvetica Neue",Arial,sans-serif;background:#edf1f6;color:#17243a;-webkit-user-select:none;-webkit-touch-callout:none}
+input{-webkit-user-select:text}
+body{padding:12px}
+.shell{max-width:850px;min-height:100%;margin:0 auto;background:#fff;border-radius:24px;box-shadow:0 12px 38px rgba(16,43,80,.14);display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;overflow:hidden}
+header{padding:20px 28px 15px;border-bottom:1px solid #edf0f4;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:space-between;justify-content:space-between}
+.brand{font-size:30px;font-weight:bold;letter-spacing:-1px;color:#102b50}
+.brand span{color:#e3ad21}
+.tag{font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#657187;font-weight:bold}
+.progress{padding:15px 28px 0}
+.meta{overflow:hidden;font-size:13px;color:#657187;margin-bottom:8px}
+.meta .r{float:right}
+.track{height:7px;background:#e9edf2;border-radius:20px;overflow:hidden}
+.bar{height:100%;width:20%;background:#e3ad21;-webkit-transition:width .25s;transition:width .25s}
+main{-webkit-flex:1;flex:1;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;padding:24px 32px}
+.screen{width:100%;max-width:680px}
+.hidden{display:none!important}
+.kicker{text-align:center;color:#c38d00;font-size:13px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+h1{text-align:center;font-size:34px;line-height:1.15;margin:0 0 14px;color:#102b50}
+.help{text-align:center;font-size:18px;line-height:1.4;color:#657187;margin:0 auto 26px;max-width:570px}
+.choices{display:-webkit-flex;display:flex;-webkit-flex-wrap:wrap;flex-wrap:wrap;-webkit-justify-content:space-between;justify-content:space-between}
+.choice{width:48.8%;min-height:88px;margin-bottom:13px;border:2px solid #d9e0e9;border-radius:15px;background:#fff;color:#102b50;font-size:20px;font-weight:bold;padding:14px;font-family:inherit;-webkit-appearance:none}
+.choice.wide{width:100%}
+.choice:active,.choice.sel{border-color:#e3ad21;background:#fff9e8}
+.emoji{display:block;font-size:28px;margin-bottom:7px}
+.fields{max-width:530px;margin:0 auto}
+.fields label{display:block;font-size:16px;font-weight:bold;color:#102b50;margin:0 0 7px}
+.fields input[type=text],.fields input[type=tel],.fields input[type=email]{display:block;width:100%;height:56px;border:2px solid #d9e0e9;border-radius:11px;padding:0 14px;font-size:19px;margin-bottom:16px;-webkit-appearance:none;font-family:inherit}
+.fields input:focus{outline:none;border-color:#e3ad21}
+.fields input.err{border-color:#c0392b}
+.consent{display:-webkit-flex;display:flex;-webkit-align-items:flex-start;align-items:flex-start;font-size:14px;line-height:1.4;color:#4a5568;margin:4px 0 6px;font-weight:normal!important}
+.consent input{width:26px;height:26px;margin:0 12px 0 0;-webkit-flex-shrink:0;flex-shrink:0}
+.msg{min-height:20px;text-align:center;color:#c0392b;font-size:15px;margin-top:8px}
+.actions{text-align:center;margin-top:20px}
+.btn{min-height:58px;padding:14px 26px;margin:0 6px 10px;border:0;border-radius:12px;background:#102b50;color:#fff;font-size:18px;font-weight:bold;font-family:inherit;-webkit-appearance:none}
+.btn.gold{background:#e3ad21;color:#18243a}
+.btn.secondary{background:#e9edf2;color:#102b50}
+.btn.small{min-height:46px;font-size:15px;padding:10px 18px}
+footer{padding:13px 20px 17px;text-align:center;color:#8490a1;font-size:12px}
+.thanks{text-align:center}
+.symbol{font-size:62px;color:#2f8f61}
+.thanks p{font-size:19px;color:#657187;line-height:1.5}
+/* Admin */
+.panel{max-width:560px;margin:0 auto;font-size:16px}
+.panel h2{color:#102b50;text-align:center;margin:0 0 16px}
+.stats{overflow:hidden;margin-bottom:14px}
+.stat{float:left;width:32%;margin-right:2%;background:#f4f6f9;border-radius:12px;padding:12px;text-align:center}
+.stat:last-child{margin-right:0}
+.stat b{display:block;font-size:28px;color:#102b50}
+.stat small{color:#657187}
+.info{background:#f4f6f9;border-radius:12px;padding:12px;margin-bottom:14px;line-height:1.6;color:#4a5568;font-size:14px}
+textarea{width:100%;height:180px;font-size:12px;font-family:Menlo,monospace;border:2px solid #d9e0e9;border-radius:10px;padding:8px;-webkit-user-select:text}
+@media (max-width:560px){body{padding:0}.shell{border-radius:0}.choice{width:100%;min-height:70px}h1{font-size:28px}.btn{width:100%;margin:0 0 10px}}
+</style>
+</head>
+<body ontouchstart="">
+<div class="shell">
+  <header>
+    <div class="brand" id="brand">ademicon<span>.</span></div>
+    <div class="tag">Pesquisa rápida</div>
+  </header>
+
+  <div id="progress" class="progress">
+    <div class="meta"><span id="count">ETAPA 1 DE 5</span><span class="r">Menos de 1 minuto</span></div>
+    <div class="track"><div id="bar" class="bar"></div></div>
+  </div>
+
+  <main>
+    <!-- 1. Objetivo -->
+    <section id="s0" class="screen">
+      <div class="kicker">Queremos conhecer você</div>
+      <h1>Qual é o seu principal objetivo hoje?</h1>
+      <p class="help">Toque na opção que melhor representa o que você procura.</p>
+      <div class="choices">
+        <button class="choice" data-k="objetivo" data-v="Comprar um imóvel"><span class="emoji">🏠</span>Comprar um imóvel</button>
+        <button class="choice" data-k="objetivo" data-v="Comprar um veículo"><span class="emoji">🚗</span>Comprar um veículo</button>
+        <button class="choice" data-k="objetivo" data-v="Investir / fazer patrimônio"><span class="emoji">📈</span>Investir / fazer patrimônio</button>
+        <button class="choice" data-k="objetivo" data-v="Realizar um projeto"><span class="emoji">✨</span>Realizar um projeto</button>
+        <button class="choice wide" data-k="objetivo" data-v="Ainda não sei"><span class="emoji">💬</span>Ainda não sei</button>
+      </div>
+    </section>
+
+    <!-- 2. Prazo (qualifica o lead) -->
+    <section id="s1" class="screen hidden">
+      <div class="kicker">Planejamento</div>
+      <h1>Em quanto tempo você quer realizar esse sonho?</h1>
+      <p class="help">Não existe resposta certa. É só para entendermos o seu momento.</p>
+      <div class="choices">
+        <button class="choice" data-k="prazo" data-v="Até 6 meses"><span class="emoji">⚡</span>Em até 6 meses</button>
+        <button class="choice" data-k="prazo" data-v="6 a 12 meses"><span class="emoji">📅</span>De 6 meses a 1 ano</button>
+        <button class="choice" data-k="prazo" data-v="1 a 2 anos"><span class="emoji">🗓</span>De 1 a 2 anos</button>
+        <button class="choice" data-k="prazo" data-v="Mais de 2 anos"><span class="emoji">🌱</span>Daqui a mais de 2 anos</button>
+        <button class="choice wide" data-k="prazo" data-v="Só pesquisando"><span class="emoji">🔍</span>Só estou pesquisando</button>
+      </div>
+      <div class="actions"><button class="btn secondary" data-act="back">VOLTAR</button></div>
+    </section>
+
+    <!-- 3. Valor estimado (opcional; faixas mudam conforme o objetivo) -->
+    <section id="s2" class="screen hidden">
+      <div class="kicker">Opcional</div>
+      <h1 id="valorTit">Quanto custa, mais ou menos, esse sonho?</h1>
+      <p class="help">Uma ideia aproximada já ajuda. Se preferir, pode pular.</p>
+      <div class="choices" id="valorChoices"></div>
+      <div class="actions"><button class="btn secondary" data-act="back">VOLTAR</button></div>
+    </section>
+
+    <!-- 4. Conhecimento de consórcio -->
+    <section id="s3" class="screen hidden">
+      <div class="kicker">Sobre você</div>
+      <h1>Você já conhece o consórcio?</h1>
+      <p class="help">Queremos saber como explicar melhor para você.</p>
+      <div class="choices">
+        <button class="choice" data-k="consorcio" data-v="Já fiz / tenho"><span class="emoji">👍</span>Já fiz ou tenho</button>
+        <button class="choice" data-k="consorcio" data-v="Conheço, nunca fiz"><span class="emoji">🤔</span>Conheço, mas nunca fiz</button>
+        <button class="choice wide" data-k="consorcio" data-v="Não conheço"><span class="emoji">👋</span>Não conheço</button>
+      </div>
+      <div class="actions"><button class="btn secondary" data-act="back">VOLTAR</button></div>
+    </section>
+
+    <!-- 5. Interesse -->
+    <section id="s4" class="screen hidden">
+      <div class="kicker">Próximo passo</div>
+      <h1>Quer receber uma simulação gratuita pelo WhatsApp?</h1>
+      <p class="help">Sem compromisso. Você vê valores e parcelas para o seu objetivo.</p>
+      <div class="choices">
+        <button class="choice" data-k="interesse" data-v="Sim"><span class="emoji">✅</span>Sim, quero</button>
+        <button class="choice" data-k="interesse" data-v="Não"><span class="emoji">🙌</span>Agora não, obrigado</button>
+      </div>
+      <div class="actions"><button class="btn secondary" data-act="back">VOLTAR</button></div>
+    </section>
+
+    <!-- 6. Contato -->
+    <section id="s5" class="screen hidden">
+      <div class="kicker">Quase lá!</div>
+      <h1>Para onde enviamos sua simulação?</h1>
+      <form id="form" class="fields" autocomplete="off" novalidate>
+        <label for="nome">Como podemos te chamar? *</label>
+        <input id="nome" type="text" placeholder="Seu nome" maxlength="80" autocapitalize="words" autocorrect="off">
+        <label for="whatsapp">WhatsApp com DDD *</label>
+        <input id="whatsapp" type="tel" placeholder="(21) 99999-9999" maxlength="16">
+        <label for="email">E-mail (opcional)</label>
+        <input id="email" type="email" placeholder="voce@exemplo.com" maxlength="120" autocapitalize="off" autocorrect="off">
+        <label class="consent"><input id="aceite" type="checkbox"><span id="aceiteTxt">Autorizo o consultor autorizado Ademicon a entrar em contato pelo WhatsApp ou e-mail para enviar a simulação. Posso pedir a exclusão dos meus dados a qualquer momento.</span></label>
+        <div id="formMsg" class="msg"></div>
+        <div class="actions">
+          <button type="button" class="btn secondary" data-act="back">VOLTAR</button>
+          <button type="submit" class="btn gold">ENVIAR</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Obrigado -->
+    <section id="done" class="screen thanks hidden">
+      <div class="symbol">✓</div>
+      <h1>Obrigado pela participação!</h1>
+      <p id="doneTxt">Sua resposta foi registrada.<br>Tenha um excelente dia!</p>
+      <div class="actions"><button class="btn gold" data-act="restart">PRÓXIMA PESSOA</button></div>
+    </section>
+
+    <!-- PIN -->
+    <section id="pin" class="screen hidden">
+      <div class="panel">
+        <h2>Área do consultor</h2>
+        <div class="fields"><label for="pinIn">PIN</label><input id="pinIn" type="tel" maxlength="8" placeholder="••••"></div>
+        <div id="pinMsg" class="msg"></div>
+        <div class="actions">
+          <button class="btn secondary" data-act="restart">CANCELAR</button>
+          <button class="btn" data-act="pinok">ENTRAR</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Admin -->
+    <section id="admin" class="screen hidden">
+      <div class="panel">
+        <h2>Área do consultor</h2>
+        <div class="stats">
+          <div class="stat"><b id="stTotal">0</b><small>respostas</small></div>
+          <div class="stat"><b id="stLeads">0</b><small>contatos</small></div>
+          <div class="stat"><b id="stPend">0</b><small>a enviar</small></div>
+        </div>
+        <div class="info" id="adInfo"></div>
+        <div class="actions">
+          <button class="btn gold small" data-act="sync">SINCRONIZAR AGORA</button>
+          <button class="btn secondary small" data-act="showcsv">VER DADOS (CSV)</button>
+          <button class="btn secondary small" data-act="setup">CONFIGURAR</button>
+          <button class="btn secondary small" data-act="purge">LIMPAR JÁ ENVIADOS</button>
+        </div>
+        <textarea id="csv" class="hidden" readonly></textarea>
+        <div class="actions"><button class="btn" data-act="restart">VOLTAR À PESQUISA</button></div>
+      </div>
+    </section>
+
+    <!-- Configuração -->
+    <section id="setup" class="screen hidden">
+      <div class="panel">
+        <h2>Configuração do tablet</h2>
+        <div class="fields">
+          <label for="cfLocal">Local da ação</label>
+          <input id="cfLocal" type="text" placeholder="Ex.: Lava-jato La Toni" maxlength="60">
+          <label for="cfDevice">Nome do tablet</label>
+          <input id="cfDevice" type="text" placeholder="Ex.: ipad2-01" maxlength="30" autocapitalize="off">
+          <label for="cfToken">Token de envio (o mesmo da Cloudflare)</label>
+          <input id="cfToken" type="text" maxlength="100" autocapitalize="off" autocorrect="off">
+          <label for="cfPin">PIN da área do consultor (4 a 8 dígitos)</label>
+          <input id="cfPin" type="tel" maxlength="8">
+        </div>
+        <div id="setupMsg" class="msg"></div>
+        <div class="actions"><button class="btn gold" data-act="savesetup">SALVAR</button></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>Ademicon • Sua conquista começa com planejamento</footer>
+</div>
+
+<script>
+/* ES5 puro, sem fetch/Promise/arrow functions, para rodar no Safari 9 */
+(function () {
+  'use strict';
+  var API = '/api/leads';
+  var KEY = 'pesq_ademicon_v2';       // respostas
+  var CFG = 'pesq_ademicon_cfg';      // configuração do tablet
+  var OLD = 'pesquisa_ademicon_respostas_v1'; // versão anterior (migração)
+  var IDLE_MS = 60000, DONE_MS = 8000, SYNC_MS = 120000, BATCH = 50;
+  var TOTAL_STEPS = 6;
+
+  // Faixas de valor por objetivo
+  var FAIXAS = {
+    'Comprar um imóvel': { tit: 'Qual o valor aproximado do imóvel?', f: ['Até R$ 250 mil', 'R$ 250 a 500 mil', 'R$ 500 mil a 1 milhão', 'Acima de R$ 1 milhão'] },
+    'Comprar um veículo': { tit: 'Qual o valor aproximado do veículo?', f: ['Até R$ 60 mil', 'R$ 60 a 100 mil', 'R$ 100 a 180 mil', 'Acima de R$ 180 mil'] },
+    '_': { tit: 'Quanto custa, mais ou menos, esse sonho?', f: ['Até R$ 100 mil', 'R$ 100 a 300 mil', 'R$ 300 a 600 mil', 'Acima de R$ 600 mil'] }
+  };
+  function buildValor(obj) {
+    var c = FAIXAS[obj] || FAIXAS._, html = '', i;
+    for (i = 0; i < c.f.length; i++) html += '<button class="choice" data-k="valor" data-v="' + c.f[i] + '"><span class="emoji">💰</span>' + c.f[i] + '</button>';
+    html += '<button class="choice wide" data-k="valor" data-v="Não informado"><span class="emoji">🤐</span>Prefiro não informar</button>';
+    $('valorChoices').innerHTML = html;
+    $('valorTit').innerHTML = c.tit;
+  }
+
+  var a, step, hist, idleTimer, doneTimer, syncing = false, lastErr = '', storageOk = true;
+
+  function $(id) { return document.getElementById(id); }
+  function trim(s) { return String(s || '').replace(/^\s+|\s+$/g, ''); }
+  function digits(s) { return String(s || '').replace(/\D/g, ''); }
+
+  function load(k, def) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : def; } catch (e) { return def; } }
+  function store(k, v) {
+    try { localStorage.setItem(k, JSON.stringify(v)); return true; }
+    catch (e) { storageOk = false; return false; }
+  }
+  function records() { return load(KEY, []); }
+  function cfg() { return load(CFG, {}); }
+
+  function uid() {
+    return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10) + '-' + Math.random().toString(36).slice(2, 6);
+  }
+
+  // Migra respostas do arquivo antigo (se o iPad já tiver usado a versão anterior)
+  function migrate() {
+    var old = load(OLD, null), d, i, r;
+    if (!old || !old.length) return;
+    d = records();
+    for (i = 0; i < old.length; i++) {
+      r = old[i];
+      d.push({ id: uid(), respondido_em: r.data, objetivo: r.objetivo || '', prazo: '', valor: '', consorcio: '',
+        conhece_ademicon: r.conhece_ademicon || '', interesse: r.deseja_contato || '', nome: r.nome || '',
+        whatsapp: digits(r.whatsapp), email: r.email || '', aceite: false, aceite_texto: '',
+        local_acao: 'migrado v1', dispositivo: cfg().device || '', synced: false });
+    }
+    if (store(KEY, d)) { try { localStorage.removeItem(OLD); } catch (e) {} }
+  }
+
+  function reset() {
+    a = { objetivo: '', prazo: '', valor: '', consorcio: '', interesse: '', nome: '', whatsapp: '', email: '', aceite: false };
+    step = 0; hist = [];
+  }
+
+  function show(id) {
+    var x = document.getElementsByTagName('section'), i;
+    for (i = 0; i < x.length; i++) x[i].className = x[i].className.replace(/\s*hidden/g, '') + ' hidden';
+    $(id).className = $(id).className.replace(/\s*hidden/g, '');
+    var survey = /^s\d$/.test(id);
+    $('progress').className = survey ? 'progress' : 'progress hidden';
+    if (survey) {
+      $('count').innerHTML = 'ETAPA ' + (step + 1) + ' DE ' + TOTAL_STEPS;
+      $('bar').style.width = ((step + 1) * (100 / TOTAL_STEPS)) + '%';
+    }
+    window.scrollTo(0, 0);
+  }
+
+  function go(n) { hist.push(step); step = n; show('s' + n); }
+
+  function choose(btn) {
+    var k = btn.getAttribute('data-k'), v = btn.getAttribute('data-v');
+    a[k] = v;
+    if (k === 'objetivo') buildValor(v);
+    btn.className += ' sel';
+    setTimeout(function () {
+      btn.className = btn.className.replace(/\s*sel/g, '');
+      if (k === 'interesse') {
+        if (v === 'Sim') { go(5); } else { finish(); }
+      } else { go(step + 1); }
+    }, 150);
+  }
+
+  function back() {
+    if (!hist.length) return;
+    step = hist.pop(); show('s' + step);
+  }
+
+  function finish() {
+    var c = cfg(), d = records();
+    d.push({
+      id: uid(), respondido_em: new Date().toISOString(),
+      objetivo: a.objetivo, prazo: a.prazo, valor: a.valor, consorcio: a.consorcio, interesse: a.interesse,
+      nome: a.nome, whatsapp: a.whatsapp, email: a.email,
+      aceite: a.aceite, aceite_texto: a.aceite ? $('aceiteTxt').textContent : '',
+      local_acao: c.local || '', dispositivo: c.device || '', synced: false
+    });
+    var ok = store(KEY, d);
+    $('doneTxt').innerHTML = ok
+      ? (a.interesse === 'Sim' ? 'Recebemos seus dados.<br>Em breve você recebe sua simulação no WhatsApp!' : 'Sua resposta foi registrada.<br>Tenha um excelente dia!')
+      : 'Obrigado!<br><small style="color:#c0392b">(Atenção consultor: falha ao salvar no tablet)</small>';
+    show('done');
+    clearTimeout(doneTimer);
+    doneTimer = setTimeout(restart, DONE_MS);
+    setTimeout(function () { sync(false); }, 1500);
+  }
+
+  // Máscara simples de telefone: (21) 99999-9999
+  function maskPhone() {
+    var d = digits($('whatsapp').value).slice(0, 11), out = d;
+    if (d.length > 2) out = '(' + d.slice(0, 2) + ') ' + d.slice(2);
+    if (d.length > 6) out = '(' + d.slice(0, 2) + ') ' + d.slice(2, d.length - 4) + '-' + d.slice(d.length - 4);
+    $('whatsapp').value = out;
+  }
+
+  function submitForm(e) {
+    if (e) e.preventDefault();
+    var nome = trim($('nome').value), tel = digits($('whatsapp').value), email = trim($('email').value), msg = '';
+    $('nome').className = ''; $('whatsapp').className = ''; $('email').className = '';
+    if (nome.length < 2) { msg = 'Informe seu nome.'; $('nome').className = 'err'; }
+    else if (tel.length < 10 || tel.length > 11) { msg = 'Informe o WhatsApp com DDD.'; $('whatsapp').className = 'err'; }
+    else if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { msg = 'Confira o e-mail ou deixe em branco.'; $('email').className = 'err'; }
+    else if (!$('aceite').checked) { msg = 'Marque a autorização para recebermos seu contato.'; }
+    $('formMsg').innerHTML = msg;
+    if (msg) return false;
+    a.nome = nome; a.whatsapp = tel; a.email = email.toLowerCase(); a.aceite = true;
+    document.activeElement && document.activeElement.blur && document.activeElement.blur();
+    finish();
+    return false;
+  }
+
+  function restart() {
+    clearTimeout(doneTimer);
+    reset();
+    $('form').reset(); $('formMsg').innerHTML = ''; $('csv').className = 'hidden';
+    $('nome').className = ''; $('whatsapp').className = ''; $('email').className = '';
+    if (!cfg().token) { openSetup(); return; }
+    show('s0');
+  }
+
+  // Volta ao início se a pessoa abandonar no meio
+  function poke() {
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(function () {
+      var vis = currentScreen();
+      if (vis !== 's0' && vis !== 'setup') restart();
+    }, IDLE_MS);
+  }
+  function currentScreen() {
+    var x = document.getElementsByTagName('section'), i;
+    for (i = 0; i < x.length; i++) if (!/hidden/.test(x[i].className)) return x[i].id;
+    return '';
+  }
+
+  /* ---------- Sincronização com o servidor ---------- */
+  function pending() { var d = records(), p = [], i; for (i = 0; i < d.length; i++) if (!d[i].synced) p.push(d[i]); return p; }
+
+  function sync(manual) {
+    var c = cfg(), p, batch = [], i, r, x;
+    if (syncing || !c.token) return;
+    p = pending();
+    if (!p.length) { if (manual) { lastErr = ''; renderAdmin(); } return; }
+    for (i = 0; i < p.length && i < BATCH; i++) {
+      r = p[i];
+      batch.push({ id: r.id, respondido_em: r.respondido_em, objetivo: r.objetivo, prazo: r.prazo, valor: r.valor || '', consorcio: r.consorcio,
+        interesse: r.interesse, nome: r.nome, whatsapp: r.whatsapp, email: r.email, aceite: !!r.aceite,
+        aceite_texto: r.aceite_texto, local_acao: r.local_acao, dispositivo: r.dispositivo });
+    }
+    syncing = true;
+    if (manual) { $('adInfo').innerHTML = 'Enviando ' + batch.length + ' registro(s)...'; }
+    x = new XMLHttpRequest();
+    x.open('POST', API, true);
+    x.setRequestHeader('Content-Type', 'application/json');
+    x.setRequestHeader('X-Device-Token', c.token);
+    x.timeout = 20000;
+    x.onreadystatechange = function () {
+      var res, ok = {}, d, j, more;
+      if (x.readyState !== 4) return;
+      syncing = false;
+      if (x.status === 200) {
+        try { res = JSON.parse(x.responseText); } catch (e) { res = { ok: [] }; }
+        for (j = 0; j < (res.ok || []).length; j++) ok[res.ok[j]] = true;
+        d = records();
+        for (j = 0; j < d.length; j++) if (ok[d[j].id]) d[j].synced = true;
+        store(KEY, d);
+        c = cfg(); c.lastSync = new Date().toISOString(); store(CFG, c);
+        lastErr = '';
+        more = pending().length;
+        if (more && (res.ok || []).length) setTimeout(function () { sync(manual); }, 400);
+      } else if (x.status === 401) {
+        lastErr = 'Token recusado pelo servidor (401). Confira em CONFIGURAR.';
+      } else if (x.status === 0) {
+        lastErr = 'Sem conexão. Os dados continuam salvos no tablet.';
+      } else {
+        lastErr = 'Erro do servidor (' + x.status + ').';
+      }
+      if (currentScreen() === 'admin') renderAdmin();
+    };
+    x.ontimeout = function () { syncing = false; lastErr = 'Tempo esgotado. Tente de novo com Wi-Fi.'; if (currentScreen() === 'admin') renderAdmin(); };
+    try { x.send(JSON.stringify({ records: batch })); } catch (e) { syncing = false; }
+  }
+
+  /* ---------- Área do consultor ---------- */
+  var taps = 0, tapTimer;
+  function brandTap() {
+    taps++;
+    clearTimeout(tapTimer);
+    tapTimer = setTimeout(function () { taps = 0; }, 1500);
+    if (taps >= 5) { taps = 0; $('pinIn').value = ''; $('pinMsg').innerHTML = ''; show('pin'); }
+  }
+  function pinOk() {
+    if ($('pinIn').value === String(cfg().pin || '')) { renderAdmin(); show('admin'); }
+    else { $('pinMsg').innerHTML = 'PIN incorreto.'; $('pinIn').value = ''; }
+  }
+  function fmt(iso) {
+    if (!iso) return 'nunca';
+    var d = new Date(iso);
+    function z(n) { return (n < 10 ? '0' : '') + n; }
+    return z(d.getDate()) + '/' + z(d.getMonth() + 1) + ' ' + z(d.getHours()) + ':' + z(d.getMinutes());
+  }
+  function renderAdmin() {
+    var d = records(), c = cfg(), i, leads = 0, pend = 0;
+    for (i = 0; i < d.length; i++) { if (d[i].whatsapp) leads++; if (!d[i].synced) pend++; }
+    $('stTotal').innerHTML = d.length; $('stLeads').innerHTML = leads; $('stPend').innerHTML = pend;
+    $('adInfo').innerHTML =
+      'Local: <b>' + esc(c.local || '—') + '</b> · Tablet: <b>' + esc(c.device || '—') + '</b><br>' +
+      'Último envio: <b>' + fmt(c.lastSync) + '</b> · Conexão: <b>' + (navigator.onLine ? 'online' : 'offline') + '</b><br>' +
+      'Cache offline: <b>' + appcacheStatus() + '</b>' +
+      (storageOk ? '' : '<br><span style="color:#c0392b">Armazenamento indisponível (modo privado?)</span>') +
+      (lastErr ? '<br><span style="color:#c0392b">' + esc(lastErr) + '</span>' : '');
+  }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (m) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m]; }); }
+  function showCSV() {
+    var d = records(), cols = ['respondido_em', 'local_acao', 'objetivo', 'prazo', 'valor', 'consorcio', 'interesse', 'nome', 'whatsapp', 'email', 'aceite', 'synced'];
+    var out = cols.join(';') + '\n', i, j, row;
+    for (i = 0; i < d.length; i++) {
+      row = [];
+      for (j = 0; j < cols.length; j++) row.push('"' + String(d[i][cols[j]] === undefined ? '' : d[i][cols[j]]).replace(/"/g, '""') + '"');
+      out += row.join(';') + '\n';
+    }
+    $('csv').value = out; $('csv').className = '';
+  }
+  function purge() {
+    var d = records(), keep = [], i, n = 0;
+    for (i = 0; i < d.length; i++) { if (d[i].synced) n++; else keep.push(d[i]); }
+    if (!n) { alert('Não há registros já enviados para limpar.'); return; }
+    if (!confirm('Remover do tablet ' + n + ' registro(s) que já estão no banco?')) return;
+    store(KEY, keep); renderAdmin();
+  }
+  function openSetup() {
+    var c = cfg();
+    $('cfLocal').value = c.local || ''; $('cfDevice').value = c.device || 'ipad2-01';
+    $('cfToken').value = c.token || ''; $('cfPin').value = c.pin || ''; $('setupMsg').innerHTML = '';
+    show('setup');
+  }
+  function saveSetup() {
+    var c = cfg(), pin = digits($('cfPin').value), tok = trim($('cfToken').value);
+    if (tok.length < 16) { $('setupMsg').innerHTML = 'Token muito curto (mínimo 16 caracteres).'; return; }
+    if (pin.length < 4) { $('setupMsg').innerHTML = 'PIN deve ter de 4 a 8 dígitos.'; return; }
+    c.local = trim($('cfLocal').value); c.device = trim($('cfDevice').value); c.token = tok; c.pin = pin;
+    if (!store(CFG, c)) { $('setupMsg').innerHTML = 'Não foi possível salvar. Desative a navegação privada.'; return; }
+    restart();
+  }
+
+  /* ---------- AppCache (offline no iOS 9) ---------- */
+  function appcacheStatus() {
+    var ac = window.applicationCache;
+    if (!ac) return 'não suportado';
+    return ['sem cache', 'pronto', 'verificando', 'baixando', 'atualização pronta', 'obsoleto'][ac.status] || '?';
+  }
+  if (window.applicationCache) {
+    window.applicationCache.addEventListener('updateready', function () {
+      try { window.applicationCache.swapCache(); } catch (e) {}
+      if (currentScreen() === 's0') location.reload();
+    }, false);
+  }
+
+  /* ---------- Eventos ---------- */
+  document.addEventListener('click', function (e) {
+    var t = e.target;
+    while (t && t !== document && !t.getAttribute('data-k') && !t.getAttribute('data-act')) t = t.parentNode;
+    if (!t || t === document) return;
+    if (t.getAttribute('data-k')) { choose(t); return; }
+    switch (t.getAttribute('data-act')) {
+      case 'back': back(); break;
+      case 'restart': restart(); break;
+      case 'pinok': pinOk(); break;
+      case 'sync': lastErr = ''; sync(true); break;
+      case 'showcsv': showCSV(); break;
+      case 'purge': purge(); break;
+      case 'setup': openSetup(); break;
+      case 'savesetup': saveSetup(); break;
+    }
+  }, false);
+  $('brand').addEventListener('click', brandTap, false);
+  $('form').addEventListener('submit', submitForm, false);
+  $('whatsapp').addEventListener('input', maskPhone, false);
+  document.addEventListener('touchstart', poke, false);
+  document.addEventListener('keydown', poke, false);
+  window.addEventListener('online', function () { sync(false); }, false);
+
+  // Teste de armazenamento (Safari em modo privado bloqueia localStorage)
+  try { localStorage.setItem('__t', '1'); localStorage.removeItem('__t'); } catch (e) { storageOk = false; }
+
+  migrate();
+  reset();
+  restart();
+  poke();
+  setInterval(function () { sync(false); }, SYNC_MS);
+})();
+</script>
+</body>
+</html>
