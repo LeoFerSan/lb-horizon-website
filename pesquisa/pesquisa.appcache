@@ -1,9 +1,14 @@
 CACHE MANIFEST
-# v3 2026-11-25
+# v4 2026-11-25 (logo Ademicon Américas)
 # Altere a linha acima (ex.: v3) sempre que publicar uma nova versão do index.html,
 # senão o iPad continua usando a versão antiga guardada em cache.
 # A própria página (index.html) entra no cache automaticamente; não liste aqui
 # para evitar redirecionamentos de "URL bonita" da Cloudflare, que quebram o AppCache.
+
+CACHE:
+logo-ademicon-americas.jpg
+icone-76.png
+icone-152.png
 
 NETWORK:
 *
