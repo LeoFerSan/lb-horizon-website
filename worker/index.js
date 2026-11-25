@@ -1,7 +1,7 @@
-// Cloudflare Pages Function: POST /api/leads
+// Worker do site lbhorizon.com.br: responde POST /api/leads; o resto é servido dos arquivos estáticos.
 // Recebe lotes de respostas do tablet e grava no Neon (idempotente pelo id).
 // Sem dependências: usa a API HTTP do Neon diretamente.
-// Variáveis no painel da Cloudflare (Settings > Variables and Secrets, tipo "Secret"):
+// Variáveis no Worker lb-horizon-website (Settings > Variables and Secrets, tipo "Secret"):
 //   DATABASE_URL  -> connection string do usuário pesquisa_writer (só pode gravar)
 //   LEADS_TOKEN   -> token longo, o mesmo digitado na tela CONFIGURAR do iPad
 
@@ -38,7 +38,7 @@ const INSERT = `
   ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)
   ON CONFLICT (id) DO NOTHING`;
 
-export async function onRequestPost({ request, env }) {
+async function handleLeads(request, env) {
   if (!env.LEADS_TOKEN || !env.DATABASE_URL) {
     return new Response('servidor nao configurado', { status: 503 });
   }
@@ -72,3 +72,14 @@ export async function onRequestPost({ request, env }) {
   return Response.json({ ok });
 }
 
+
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    if (url.pathname === '/api/leads') {
+      if (request.method !== 'POST') return new Response('method not allowed', { status: 405, headers: { Allow: 'POST' } });
+      return handleLeads(request, env);
+    }
+    return env.ASSETS.fetch(request);
+  },
+};

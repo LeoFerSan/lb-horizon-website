@@ -34,9 +34,10 @@ WHATSAPP
 PESQUISA DE CAMPO ADEMICON (iPad 2)
 - pesquisa/index.html ........ página da pesquisa (lbhorizon.com.br/pesquisa/), funciona offline
 - pesquisa/pesquisa.appcache . cache offline do iPad. Ao alterar o index.html, mude a linha "# v3".
-- functions/api/leads.js ..... função da Cloudflare (POST /api/leads) que grava no Neon,
+- worker/index.js ............ código do Worker (POST /api/leads) que grava no Neon,
                                projeto "Dashboard Ademicon", tabela pesquisa_campo.
 - _headers ................... cabeçalhos do cache offline
-- Variáveis secretas no projeto Pages (Settings > Variables and Secrets):
+- wrangler.jsonc ............. configuração do Worker (site estático + /api/leads)
+- Variáveis secretas no Worker lb-horizon-website (Settings > Variables and Secrets):
   DATABASE_URL (usuário pesquisa_writer, só grava) e LEADS_TOKEN (mesmo token do iPad).
 - O build.py não mexe nesses arquivos.
