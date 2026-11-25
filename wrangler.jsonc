@@ -8,5 +8,7 @@
     "directory": ".",
     "binding": "ASSETS"
   },
-  "observability": { "enabled": true }
+  "observability": { "enabled": true },
+  // Exigido pelo "wrangler preview" que a Cloudflare roda nos ramos (pré-visualizações)
+  "previews": {}
 }
